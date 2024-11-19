@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Course Materials for DIP (Digital Image Processing)
 
 ### [上课课件（持续更新）](https://rec.ustc.edu.cn/share/705bfa50-6e53-11ef-b955-bb76c0fede49) 
@@ -12,3 +13,12 @@
 ### 课程作业
 - 作业会更新在[Assignments](Assignments/)文件夹
 - [作业提交模板](https://github.com/paperswithcode/releasing-research-code/blob/master/templates/README.md)
+=======
+## DIP Assignments 
+- [01] [Image Warping](01_ImageWarping/)
+- [02] [DIP with PyTorch](02_DIPwithPyTorch/)
+- [03] XXX
+- [04] XXX
+- [05] XXX
+- ...
+>>>>>>> 4dd1292d5df30ec079381f7865ec658204fdbe54
