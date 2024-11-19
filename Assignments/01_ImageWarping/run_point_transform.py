@@ -41,17 +41,30 @@ def record_points(evt: gr.SelectData):
 
 # 执行仿射变换
 
-def point_guided_deformation(image, source_pts, target_pts, alpha=1.0, eps=1e-8):
-    """ 
-    Return
-    ------
-        A deformed image.
-    """
-    
-    warped_image = np.array(image)
-    ### FILL: 基于MLS or RBF 实现 image warping
 
-    return warped_image
+
+
+def point_guided_deformation(image, source_pts,target_pts,  alpha=1.0, eps=1e-8):
+    h, w = image.shape[:2]
+    deformed_image = np.zeros_like(image)
+    
+    
+    for x in range(w):
+        for y in range(h):
+            p = np.array([x, y])
+            weights = np.array([1 / (np.linalg.norm(p - q) ** (alpha*2) + eps) for q in target_pts])
+            weighted_source = np.sum(weights[:, None] * target_pts, axis=0)
+            weighted_target = np.sum(weights[:, None] * source_pts, axis=0)
+            new_target_pts = target_pts - np.tile(weighted_source, (target_pts.shape[0], 1))
+            new_source_pts = source_pts - np.tile(weighted_target, (source_pts.shape[0], 1))
+            result1 = np.linalg.inv(np.sum([w * np.outer(A_i, A_i) for A_i, w in zip(new_target_pts, weights)], axis=0))
+            result2 = np.sum([w * np.outer(A_i, B_i) for A_i,B_i, w in zip(new_target_pts,new_source_pts, weights)], axis=0)
+            transformed_p = np.round(np.dot(np.dot(p - weighted_source, result1), result2) + weighted_target).astype(int)
+            x_int = np.clip(transformed_p[0], 0, image.shape[1] - 1)
+            y_int = np.clip(transformed_p[1], 0, image.shape[0] - 1)
+            deformed_image[y, x] = image[y_int, x_int]
+    return deformed_image
+
 
 def run_warping():
     global points_src, points_dst, image ### fetch global variables
